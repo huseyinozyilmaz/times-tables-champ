@@ -1,9 +1,15 @@
 <template>
-  <div ontouchstart="">
-    <div class="button">
-      <a href="#">
-        <slot></slot>
-      </a>
-    </div>
+  <div class="button" :class="styleClass">
+    <button type="button">
+      <slot></slot>
+    </button>
   </div>
 </template>
+
+<script setup>
+const props = defineProps(['type'])
+
+const styleClass = computed(() => {
+  return 'button-' + props.type
+})
+</script>

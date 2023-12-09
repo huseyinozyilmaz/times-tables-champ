@@ -10,23 +10,54 @@
     @apply relative inline-block m-6 
   }
 
-  .button a {
+  .button button {
     @apply text-gray-700 font-bold uppercase tracking-wider text-xl text-center block relative py-4 px-8 font-black-ops-one
   }
 
-  .button a {
+  .button button {
     background-color:#FFA12B;
     text-shadow: 0px 1px 0px #000;
-    filter: dropshadow(color=#000, offx=0px, offy=1px);
     box-shadow:inset 0 1px 0 #FFE5C4, 0 10px 0 #915100;
     border-radius: 5px;
   }
-  .button a:active{
+  .button button:active{
     top:10px;
     background-color:#F78900;
     box-shadow:inset 0 1px 0 #FFE5C4, inset 0 -3px 0 #915100;
   }
   .button:after{
+    content:"";
+    height:100%;
+    width:100%;
+    padding:4px;
+    position: absolute;
+    bottom:-15px;
+    left:-4px;
+    z-index:-1;
+    background-color:#2B1800;
+    border-radius: 5px;
+  }
+
+  .btn-default {
+    @apply relative inline-block m-6
+  }
+  .btn-default button {
+    @apply text-gray-700 uppercase tracking-wider text-2xl text-center block relative py-4 px-8 }
+  .btn-default button {
+    background-color:#eaeaea;
+    text-shadow: 0px 1px 0px #000;
+    box-shadow:inset 0 1px 0 #f0f0f0, 0 10px 0 #a0a0a0;
+    border-radius: 5px;
+  }
+  .btn-default:after {
+    background-color: rgb(172, 172, 172);
+  }
+  .btn-default button:active{
+    top:10px;
+    background-color:#e1e1e1;
+    box-shadow:inset 0 1px 0 #FFE5C4, inset 0 -3px 0 #a0a0a0;
+  }
+  .btn-default:after{
     content:"";
     height:100%;
     width:100%;

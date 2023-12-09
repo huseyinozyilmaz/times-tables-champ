@@ -10,6 +10,10 @@
         </div>
       </div>
       <div class="w-24">
+        <h3 class="font-bold">Questions</h3>
+        <div class="py-2.5">{{ game.counts.remaining }}</div>
+      </div>
+      <div class="w-24">
         <h3 class="font-bold">Time</h3>
         <div class="py-2.5">{{ formatTime(remainingTime) }}</div>
       </div>
@@ -23,10 +27,18 @@
       </div>
     </header>
     <section v-if="game.status === 'running'" class="text-center mt-12">
-      <GameQuestion :question="game.questions[0]"/>
+      <GameQuestion :question="game.question" :result="result" @submit="onSubmit"/>
       <div class="mt-4">
-        <TouchButton @click="onNext()">Next</TouchButton>
+        <TouchButton @click="onNext()" type="primary">Next</TouchButton>
       </div>
+    </section>
+    <section v-else-if="game.status === 'finished'" class="text-center mt-12">
+      <h1 class="font-black-ops-one text-2xl">MISSION COMPLETE</h1>
+      <h2 class="font-black-ops-one uppercase py-3">score</h2>
+      <h3 class="font-black-ops-one text-5xl pb-6">{{ game.score }}</h3>
+      <input type="text" v-model="player" class="border-2 uppercase p-3 text-center w-64 block m-auto border-gray-800" placeholder="Enter your name">
+      <TouchButtonType @click="onRestart()">Restart</TouchButtonType>
+      <TouchButton @click="onScoreSave()">Save</TouchButton>
     </section>
     <section v-else class="text-center">
       <h1 class="font-black-ops-one text-lg py-7 tracking-wider">Are you ready?</h1>
@@ -41,14 +53,38 @@ import { formatTime } from '../helpers/formatters'
 
 const selectedLevel = ref(3)
 const game = ref(new Game(selectedLevel.value))
+const player = ref('')
 const timeElapsed = ref(0)
 const interval = ref(undefined)
+const result = ref({})
 
 const remainingTime = computed(() => {
   return (100 - timeElapsed.value) / 10
 })
 
 const onStart = () => {
+  result.value = {}
+  game.value.init()
+}
+
+const onNext = () => {
+  result.value = {}
+  game.value.next()
+}
+
+const onSubmit = (answer, timeElapsed) => {
+  result.value = game.value.submit({ answer, timeElapsed})
+}
+
+const onScoreSave = () => {
+  if (player.value) {
+    game.value.save(player.value)
+  }
+  navigateTo('/scoreboard')
+}
+
+const onRestart = () => {
+  result.value = {}
   game.value.init()
 }
 </script>

@@ -1,7 +1,7 @@
 export class Game {
 
   constructor(level) {
-    this.level = level
+    this.level = level ? level : 3
     this.life = 3
     this.score = 0
     this.matrix = [[]]
@@ -9,13 +9,29 @@ export class Game {
     this.maxLevel = 12
     this.status = 'ready'
     this.question = {}
+    this.counts = { remaining: level * 12, answered: 0, total: level * 12 } 
+    this.scoreboard = []
   }
 
   init() {
+    this.life = 3
+    this.score = 0
     this.matrix = generateMatrix()
-    this.questions.push(this.ask())
-    this.questions.push(this.ask())
-    this.questions.push(this.ask())
+    this.questions = []
+    this.maxLevel = 12
+    this.question = {}
+    this.counts = { remaining: this.level * 12, answered: 0, total: this.level * 12 } 
+
+    this.counts = { remaining: 3, answered: 0, total: 3 } 
+
+    while (this.questions.length < this.counts.total) {
+      let newQuestion = this.ask()
+      // Only unique questions
+      if (!this.questions.find(q => solveQuestion(q) === solveQuestion(newQuestion) && q.multipliers[0] === newQuestion.multipliers[0])) {
+        this.questions.push(newQuestion)
+      }
+    }
+    this.scoreboard = readScoreboard()
     this.question = this.questions[0]
     this.status = 'running'
   }
@@ -28,24 +44,44 @@ export class Game {
 
     return {
       multipliers,
-      answer,
       options: generateOptions(x, y, this.matrix)
     }
   }
 
+  save(player) {
+    this.scoreboard.push({
+      id: crypto.randomUUID(),
+      player,
+      score: this.score,
+      badges: []
+    })
+    this.scoreboard.sort((a, b) => a.score - b.score)
+    writeScoreboard(this.scoreboard)
+  }
+
   next () {
-    const currentIndex = this.questions.indexOf(this.question)
-    const nextIndex = currentIndex + 1 < this.questions.length ? currentIndex + 1 : currentIndex
-    this.question = this.questions[nextIndex]
+    this.question = this.questions[this.counts.answered]
   }
 
   isFinished () {
-    return this.questions.indexOf(this.question) === this.questions.length -1
+    return this.counts.remaining === 0
   }
 
   submit (response) {
-    if (this.question.answer === response.answer) {
+    this.counts.remaining--
+    this.counts.answered++
+
+    if (this.counts.remaining === 0) {
+      this.status = 'finished' 
+    }
+
+    if (isAnswerCorrect(this.question, response.answer)) {
       this.score = this.score + calculateScore(response)
+      return {
+        status: 'success',
+        answer: solveQuestion(this.question),
+        message: getSuccessMessage()
+      }
     } else {
       this.life--
     }
@@ -53,7 +89,33 @@ export class Game {
     if (this.life < 1) {
       this.status = 'over'
     }
+    return {
+      status: 'error',
+      answer: solveQuestion(this.question),
+      message: getFailureMessage()
+    }
   }
+}
+
+const readScoreboard = () => {
+  const board = localStorage.getItem('times-tables-champ-scoreboard')
+  if (board) {
+    return JSON.parse(board)
+  } else {
+    return []
+  }
+}
+
+const writeScoreboard = (scoreboard) => {
+  const board = localStorage.setItem('times-tables-champ-scoreboard', JSON.stringify(scoreboard))
+}
+
+const isAnswerCorrect = (question, answer) => {
+  return solveQuestion(question) === answer
+}
+
+const solveQuestion = (question) => {
+  return question.multipliers[0] * question.multipliers[1]
 }
 
 const calculateScore = (response) => {
