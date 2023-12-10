@@ -76,9 +76,9 @@ const onSubmit = (answer, timeElapsed) => {
   result.value = game.value.submit({ answer, timeElapsed})
 }
 
-const onScoreSave = () => {
+const onScoreSave = async () => {
   if (player.value) {
-    game.value.save(player.value)
+    await game.value.save(player.value)
     navigateTo('/scoreboard')
   }
 }

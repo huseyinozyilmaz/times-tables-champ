@@ -1,3 +1,5 @@
+import { URL } from "./leaderboard"
+
 export class Game {
 
   constructor(level) {
@@ -10,7 +12,6 @@ export class Game {
     this.status = 'ready'
     this.question = {}
     this.counts = { remaining: level * 12, answered: 0, total: level * 12 } 
-    this.scoreboard = []
   }
 
   init() {
@@ -32,7 +33,6 @@ export class Game {
         this.questions.push(newQuestion)
       }
     }
-    this.scoreboard = readScoreboard()
     this.question = this.questions[0]
     this.status = 'running'
   }
@@ -48,16 +48,16 @@ export class Game {
     }
   }
 
-  save(player) {
-    this.scoreboard.push({
-      id: crypto.randomUUID(),
+  async save(player) {
+    const data = {
       player,
       score: this.score,
       badges: []
+    }
+    await $fetch(URL, {
+      method: 'POST',
+      body: data
     })
-    this.scoreboard.sort((a, b) => b.score - a.score)
-    this.scoreboard = this.scoreboard.slice(0, 10)
-    writeScoreboard(this.scoreboard)
   }
 
   next () {
@@ -96,19 +96,6 @@ export class Game {
       message: getFailureMessage()
     }
   }
-}
-
-const readScoreboard = () => {
-  const board = localStorage.getItem('times-tables-champ-scoreboard')
-  if (board) {
-    return JSON.parse(board)
-  } else {
-    return []
-  }
-}
-
-const writeScoreboard = (scoreboard) => {
-  const board = localStorage.setItem('times-tables-champ-scoreboard', JSON.stringify(scoreboard))
 }
 
 const isAnswerCorrect = (question, answer) => {
