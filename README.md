@@ -1,6 +1,6 @@
 # Times Tables Champ
 
-A game for 7 and 8 years olds to practice multiplication tables
+A game for 7 and 8 years old to practice multiplication tables
 
 ## Setup
 
