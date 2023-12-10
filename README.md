@@ -16,9 +16,7 @@ npm install
 Start the development server on `http://localhost:3000`:
 
 ```bash
-# npm
 npm run dev
-
 ```
 
 ## Production
@@ -26,15 +24,11 @@ npm run dev
 Build the application for production:
 
 ```bash
-# npm
 npm run generate
-
 ```
 
 Locally preview production build:
 
 ```bash
-# npm
 npm run preview
-
 ```
