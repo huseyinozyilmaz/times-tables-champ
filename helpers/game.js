@@ -55,7 +55,8 @@ export class Game {
       score: this.score,
       badges: []
     })
-    this.scoreboard.sort((a, b) => a.score - b.score)
+    this.scoreboard.sort((a, b) => b.score - a.score)
+    this.scoreboard = this.scoreboard.slice(0, 10)
     writeScoreboard(this.scoreboard)
   }
 
@@ -119,7 +120,7 @@ const solveQuestion = (question) => {
 }
 
 const calculateScore = (response) => {
-  return 1
+  return response.answer
 }
 const findNear = (point, min, max) => {
   return randomInt(point-2 > min ? point-2 : min, point + 2 > max ? max : point + 2 ) 
