@@ -22,7 +22,8 @@ export class Game {
     this.question = {}
     this.counts = { remaining: this.level * 12, answered: 0, total: this.level * 12 } 
 
-    this.counts = { remaining: 3, answered: 0, total: 3 } 
+    /** Testing purposes */
+    // this.counts = { remaining: 3, answered: 0, total: 3 } 
 
     while (this.questions.length < this.counts.total) {
       let newQuestion = this.ask()
@@ -40,7 +41,6 @@ export class Game {
     const x = randomInt(1, this.level)
     const y = randomInt(1, this.matrix.length - 1)
     const multipliers = shuffle([x, y])
-    const answer = this.matrix[x][y]
 
     return {
       multipliers,
