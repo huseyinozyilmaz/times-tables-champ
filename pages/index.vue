@@ -79,8 +79,8 @@ const onSubmit = (answer, timeElapsed) => {
 const onScoreSave = () => {
   if (player.value) {
     game.value.save(player.value)
+    navigateTo('/scoreboard')
   }
-  navigateTo('/scoreboard')
 }
 
 const onRestart = () => {
