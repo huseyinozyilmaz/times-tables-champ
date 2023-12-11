@@ -12,6 +12,7 @@ export class Game {
     this.status = 'ready'
     this.question = {}
     this.counts = { remaining: level * 12, answered: 0, total: level * 12 } 
+    this.answers = []
   }
 
   init() {
@@ -29,7 +30,7 @@ export class Game {
     while (this.questions.length < this.counts.total) {
       let newQuestion = this.ask()
       // Only unique questions
-      if (!this.questions.find(q => solveQuestion(q) === solveQuestion(newQuestion) && q.multipliers[0] === newQuestion.multipliers[0])) {
+      if (!this.questions.find(q => q.id === newQuestion.id)) {
         this.questions.push(newQuestion)
       }
     }
@@ -43,6 +44,7 @@ export class Game {
     const multipliers = shuffle([x, y])
 
     return {
+      id: `${multipliers[0]}x${multipliers[1]}`,
       multipliers,
       options: generateOptions(x, y, this.matrix)
     }
@@ -69,32 +71,34 @@ export class Game {
   }
 
   submit (response) {
-    this.counts.remaining--
-    this.counts.answered++
-
-    if (this.counts.remaining === 0) {
-      this.status = 'finished' 
+    if (this.question.answer) {
+      return this.question.answer
     }
 
-    if (isAnswerCorrect(this.question, response.answer)) {
-      this.score = this.score + calculateScore(response)
-      return {
-        status: 'success',
-        answer: solveQuestion(this.question),
-        message: getSuccessMessage()
-      }
-    } else {
+    if (!isAnswerCorrect(this.question, response.answer)) {
       this.life--
+      this.status = this.life < 1 ? 'over' : this.status
+      return {
+        status: 'error',
+        answer: solveQuestion(this.question),
+        message: getFailureMessage()
+      }
     }
 
-    if (this.life < 1) {
-      this.status = 'over'
-    }
-    return {
-      status: 'error',
+    const answer = {
+      status: 'success',
       answer: solveQuestion(this.question),
-      message: getFailureMessage()
+      message: getSuccessMessage()
     }
+
+    this.question.answer = answer
+    this.counts.answered++
+    this.counts.remaining--
+    
+    this.status = this.counts.remaining === 0 ? 'finished' : this.status
+
+    this.score += calculateScore(response)
+    return answer
   }
 }
 

@@ -25,7 +25,7 @@ const emit = defineEmits(['submit'])
 
 const submit = (answer) => {
   const timeElapsed = 200
-  emit('submit', answer, timeElapsed)
+  emit('submit', props.question.id, answer, timeElapsed)
 }
 
 </script>
