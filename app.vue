@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav class="flex justify-center gap-3 py-4 uppercase font-semibold tracking-widest">
-      <NuxtLink to="/" class="px-5 w-32">
+      <NuxtLink to="/" class="px-5 w-32" @click="reload">
         <div class="flex justify-start">
           <img src="~/assets/images/logo-b.svg" alt="logo" class="w-10">
         </div>
@@ -28,4 +28,10 @@ useHead({
     { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" }
   ]
 })
+
+const reload = () => {
+  if (process.client) {
+    window.location.reload()
+  }
+}
 </script>
