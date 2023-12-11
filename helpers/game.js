@@ -9,15 +9,16 @@ export class Game {
     this.matrix = [[]]
     this.questions = []
     this.maxLevel = 12
-    this.status = 'ready'
+    this.status = ''
     this.question = {}
     this.counts = { remaining: level * 12, answered: 0, total: level * 12 } 
     this.answers = []
   }
 
-  init() {
+  init(selectedLevel) {
     this.life = 3
     this.score = 0
+    this.level = selectedLevel ? selectedLevel : 3
     this.matrix = generateMatrix()
     this.questions = []
     this.maxLevel = 12
@@ -34,8 +35,14 @@ export class Game {
         this.questions.push(newQuestion)
       }
     }
-    this.question = this.questions[0]
-    this.status = 'running'
+    this.status = 'ready'
+  }
+
+  run() {
+    if (this.status === 'ready') {
+      this.question = this.questions[0]
+      this.status = 'running'
+    }
   }
 
   ask () {

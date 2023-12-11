@@ -4,7 +4,7 @@
       <div class="w-24">
         <h3 class="font-bold">Level</h3>
         <div class="flex justify-center">
-          <select id="selectedLevel" v-model="selectedLevel" class='select' :disabled="game.status === 'running'">
+          <select id="selectedLevel" v-model="selectedLevel" @change="onLevelChange" class='select' :disabled="game.status === 'running'">
             <option v-for="level in game.maxLevel " :value="level">{{ level}}</option>
           </select>
         </div>
@@ -38,7 +38,7 @@
       <h2 class="font-black-ops-one uppercase py-3">score</h2>
       <h3 class="font-black-ops-one text-5xl pb-6">{{ game.score }}</h3>
       <input type="text" v-model="player" class="border-2 uppercase p-3 text-center w-64 block m-auto border-gray-800" placeholder="Enter your name">
-      <TouchButtonType @click="onRestart()">Restart</TouchButtonType>
+      <TouchButtonType @click="onStart()">Restart</TouchButtonType>
       <TouchButton @click="onScoreSave()">Save</TouchButton>
     </section>
     <section v-else class="text-center">
@@ -73,7 +73,8 @@ const remainingTime = computed(() => {
 
 const onStart = () => {
   result.value = {}
-  game.value.init()
+  game.value.init(selectedLevel.value)
+  game.value.run()
 }
 
 const onNext = () => {
@@ -92,8 +93,7 @@ const onScoreSave = async () => {
   }
 }
 
-const onRestart = () => {
-  result.value = {}
-  game.value.init()
+const onLevelChange = () => {
+  game.value.init(selectedLevel.value)
 }
 </script>
