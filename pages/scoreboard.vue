@@ -20,7 +20,11 @@
 <script setup>
 import { URL } from '../helpers/leaderboard'
 
+console.log('fetching data from:' + URL)
+
 const { data: scores } = await useFetch(URL)
+
+console.log(scores)
 
 const onBack = () => {
   navigateTo('/')
