@@ -39,7 +39,7 @@
       <h3 class="font-black-ops-one text-5xl pb-6">{{ game.score }}</h3>
       <input type="text" v-model="player" class="border-2 uppercase p-3 text-center w-64 block m-auto border-gray-800" placeholder="Enter your name">
       <TouchButtonType @click="onStart()">Restart</TouchButtonType>
-      <TouchButton @click="onScoreSave()">Save</TouchButton>
+      <TouchButton @click="onScoreSave()" :disabled="loading">{{ loading ? 'Saving...' : 'Save' }}</TouchButton>
     </section>
     <section v-else class="text-center">
       <h1 class="font-black-ops-one text-lg py-7 tracking-wider">Are you ready?</h1>
@@ -66,6 +66,7 @@ const player = ref('')
 const timeElapsed = ref(0)
 const interval = ref(undefined)
 const result = ref({})
+const loading = ref(false)
 
 const remainingTime = computed(() => {
   return (100 - timeElapsed.value) / 10
@@ -88,8 +89,11 @@ const onSubmit = (questionId, answer, timeElapsed) => {
 
 const onScoreSave = async () => {
   if (player.value) {
-    await game.value.save(player.value)
-    navigateTo('/scoreboard')
+    loading.value = true
+    game.value.save(player.value).then(() => {
+      navigateTo('/scoreboard')
+      loading.value = false
+    })
   }
 }
 
