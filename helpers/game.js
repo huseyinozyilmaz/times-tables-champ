@@ -20,21 +20,10 @@ export class Game {
     this.score = 0
     this.level = selectedLevel ? selectedLevel : 3
     this.matrix = generateMatrix()
-    this.questions = []
-    this.maxLevel = 12
+    this.questions = generateQuestions(this.level, this.maxLevel, this.matrix)
     this.question = {}
-    this.counts = { remaining: this.level * 12, answered: 0, total: this.level * 12 } 
+    this.counts = { remaining: this.questions.length, answered: 0, total: this.questions.length } 
 
-    /** Testing purposes */
-    // this.counts = { remaining: 3, answered: 0, total: 3 } 
-
-    while (this.questions.length < this.counts.total) {
-      let newQuestion = this.ask()
-      // Only unique questions
-      if (!this.questions.find(q => q.id === newQuestion.id)) {
-        this.questions.push(newQuestion)
-      }
-    }
     this.status = 'ready'
   }
 
@@ -42,18 +31,6 @@ export class Game {
     if (this.status === 'ready') {
       this.question = this.questions[0]
       this.status = 'running'
-    }
-  }
-
-  ask () {
-    const x = randomInt(1, this.level)
-    const y = randomInt(1, this.matrix.length - 1)
-    const multipliers = shuffle([x, y])
-
-    return {
-      id: `${multipliers[0]}x${multipliers[1]}`,
-      multipliers,
-      options: generateOptions(x, y, this.matrix)
     }
   }
 
@@ -158,6 +135,45 @@ const generateMatrix = () => {
   }
   return matrix
 }
+
+const generateQuestion = (level, maxLevel, matrix) => {
+  const x = randomInt(1, level)
+  const y = randomInt(1, maxLevel)
+  const multipliers = shuffle([x, y])
+
+  return {
+    id: `${multipliers[0]}x${multipliers[1]}`,
+    multipliers,
+    level: Math.min(x, y),
+    options: generateOptions(x, y, matrix)
+  }
+}
+
+const generateQuestions = (level, maxLevel, matrix) => {
+  let questions = []
+  const numberOfTotalQuestions = level * maxLevel
+  while (questions.length < numberOfTotalQuestions) {
+    let newQuestion = generateQuestion(level, maxLevel, matrix)
+    // Only unique questions
+    if (!questions.find(q => q.id === newQuestion.id)) {
+      questions.push(newQuestion)
+    }
+  }
+  if (level > 3) {
+    questions = removeLevelFromQuestions(questions, 1)
+  }
+  if (level > 5) {
+    questions = removeLevelFromQuestions(questions, 2)
+  }
+  /** Testing purposes only */
+  // questions = questions.slice(0,3)
+  return questions
+}
+
+const removeLevelFromQuestions = (questions, levelToBeRemoved) => {
+  return questions.filter(q => q.level !== levelToBeRemoved)
+}
+
 
 export const getSuccessMessage = () => {
   const messages = [
