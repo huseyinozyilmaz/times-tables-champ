@@ -22,7 +22,7 @@ import { URL } from '../helpers/leaderboard'
 
 console.log('fetching data from:' + URL)
 
-const { data: scores } = await useFetch(URL)
+const { data: scores } = await useFetch(URL + '?v=' + (Math.random() + 1).toString(36).substring(2))
 
 console.log(scores)
 
