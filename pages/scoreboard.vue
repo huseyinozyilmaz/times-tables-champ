@@ -11,6 +11,9 @@
         <div class="w-32 text-2xl text-right">{{ record.score }}</div>
       </div>
     </section>
+    <footer class="flex justify-center py-6">
+      <TouchButton @click="onBack()">Back</TouchButton>
+    </footer>
   </div>
 </template>
 
@@ -19,4 +22,7 @@ import { URL } from '../helpers/leaderboard'
 
 const { data: scores } = await useFetch(URL)
 
+const onBack = () => {
+  navigateTo('/')
+}
 </script>

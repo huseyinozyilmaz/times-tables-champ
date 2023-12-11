@@ -31,7 +31,7 @@ useHead({
 
 const reload = () => {
   if (process.client) {
-    window.location.reload()
+    reloadNuxtApp()
   }
 }
 </script>
