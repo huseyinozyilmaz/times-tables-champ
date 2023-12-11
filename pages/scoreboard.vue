@@ -20,7 +20,7 @@
 <script setup>
 import { URL } from '../helpers/leaderboard'
 
-const { data: scores } = await useFetch(`${URL}?v=${crypto.randomUUID()}`)
+const { data: scores } = await useFetch(`${URL}?v=${new Date().valueOf() }`)
 
 const onBack = () => {
   navigateTo('/')
