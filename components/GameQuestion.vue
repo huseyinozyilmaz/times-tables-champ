@@ -17,8 +17,8 @@
       <div :class="{ 'text-green-800' : result.status === 'success' }">
         <span>{{ result.message }}</span> 
         <span v-if="hasBonus" class="text-black text-center uppercase">
-          <img src="~/assets/images/speed.svg" alt="speed" class="m-auto inline-block">
-          {{result.score.bonus}} Speed bonus
+          <img src="/resources/speed.svg" alt="speed" class="m-auto inline-block">
+          <span>{{result.score.bonus}} Speed bonus</span>
         </span>
       </div>
     </div>
