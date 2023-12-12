@@ -10,6 +10,7 @@
       <NuxtLink to="/scoreboard" class="w-32 text-sm block text-center">Scoreboard</NuxtLink>
     </nav>
     <NuxtPage />
+    <footer class="text-xs uppercase opacity-30 fixed bottom-0 right-0 p-2">rev: 12 Dec 2023</footer>
   </div>
 </template>
 

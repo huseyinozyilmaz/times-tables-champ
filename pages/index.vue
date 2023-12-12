@@ -52,7 +52,6 @@
       Counts: {{ game.counts }} |
       Question: {{ game.question }}
     </footer>
-    <footer class="text-xs uppercase opacity-30 absolute bottom-0 right-0 p-2">rev: 11 Dec 2023</footer>
   </div>
 </template>
 
