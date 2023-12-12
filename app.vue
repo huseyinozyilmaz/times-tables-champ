@@ -14,6 +14,8 @@
 </template>
 
 <script setup>
+const route = useRoute()
+
 useHead({
   title: 'Times Tables Champ | A game to practice multiplication tables',
   link: [
@@ -30,6 +32,9 @@ useHead({
 })
 
 const reload = () => {
+  if (route.name !== 'index' ) {
+    return
+  }
   if (process.client) {
     reloadNuxtApp()
   }
