@@ -8,13 +8,19 @@
       <div>=</div>
       <div class="w-20">{{ result.status === 'success' ? result.answer : '?'}}</div>
     </h1>
-    <div class="flex justify-center py-10">
+    <div class="flex justify-center py-8">
       <TouchButtonType v-for="option in question.options" @click="submit(option)">
         {{ option }}
       </TouchButtonType>
     </div>
     <div class="text-center text-red-800 tracking-wider text-lg h-12 font-black-ops-one">
-      <div :class="{ 'text-green-800' : result.status === 'success' }">{{ result.message }}</div>
+      <div :class="{ 'text-green-800' : result.status === 'success' }">
+        <span>{{ result.message }}</span> 
+        <span v-if="hasBonus" class="text-black text-center uppercase">
+          <img src="~/assets/images/speed.svg" alt="speed" class="m-auto inline-block">
+          {{result.score.bonus}} Speed bonus
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -24,8 +30,11 @@ const props = defineProps(['question', 'result'])
 const emit = defineEmits(['submit'])
 
 const submit = (answer) => {
-  const timeElapsed = 200
-  emit('submit', props.question.id, answer, timeElapsed)
+  emit('submit', props.question.id, answer)
 }
+
+const hasBonus = computed(() => {
+  return props.result && props.result.score && props.result.score.bonus
+})
 
 </script>

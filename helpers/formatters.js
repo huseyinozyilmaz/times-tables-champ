@@ -1,13 +1,10 @@
 export const formatTime = (value) => {
-  if (!value) {
-    return '10.00'
-  }
-  let result  = Number(value).toFixed(2)
+  let result  = Number(value).toFixed(1)
   if (value < 10) {
-    return '0' + result
+    return result
   }
   if (value === 0) {
-    return '00.00'
+    return '0.0'
   }
   return result
 }

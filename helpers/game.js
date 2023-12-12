@@ -13,6 +13,7 @@ export class Game {
     this.question = {}
     this.counts = { remaining: level * 12, answered: 0, total: level * 12 } 
     this.answers = []
+    this.timeout = 100 //10 Sec based on interval of 100
   }
 
   init(selectedLevel) {
@@ -65,14 +66,15 @@ export class Game {
       return {
         status: 'error',
         answer: solveQuestion(this.question),
-        message: getFailureMessage()
+        message: response.timeElapsed >=this.timeout ? getTimeoutMessage() : getFailureMessage()
       }
     }
 
     const answer = {
       status: 'success',
       answer: solveQuestion(this.question),
-      message: getSuccessMessage()
+      message: getSuccessMessage(),
+      score: calculateScore(response)
     }
 
     this.question.answer = answer
@@ -81,7 +83,7 @@ export class Game {
     
     this.status = this.counts.remaining === 0 ? 'finished' : this.status
 
-    this.score += calculateScore(response)
+    this.score += calculateScore(response).value
     return answer
   }
 }
@@ -95,6 +97,24 @@ const solveQuestion = (question) => {
 }
 
 const calculateScore = (response) => {
+  if (response.timeElapsed < 10) {
+    return { value: response.answer * 3, bonus: '3x' }
+  }
+  if (response.timeElapsed < 20) {
+    return { value: response.answer * 2, bonus: '2x' }
+  }
+  if (response.timeElapsed < 30) {
+    return { value: Math.round(response.answer * 1.4), bonus: '' }
+  }
+  if (response.timeElapsed < 40) {
+    return { value: Math.round(response.answer * 1.3), bonus: '' }
+  }
+  if (response.timeElapsed < 60) {
+    return { value: Math.round(response.answer * 1.2), bonus: '' }
+  }
+  if (response.timeElapsed < 80) {
+    return { value: Math.round(response.answer * 1.1), bonus: '' }
+  }
   return response.answer
 }
 const findNear = (point, min, max) => {
@@ -174,8 +194,7 @@ const removeLevelFromQuestions = (questions, levelToBeRemoved) => {
   return questions.filter(q => q.level !== levelToBeRemoved)
 }
 
-
-export const getSuccessMessage = () => {
+const getSuccessMessage = () => {
   const messages = [
     "Bingo! You nailed it!",
     "That's it! You're on fire!",
@@ -201,7 +220,7 @@ export const getSuccessMessage = () => {
   return messages[randomInt(0, messages.length - 1)]
 }
 
-export const getFailureMessage = () => {
+const getFailureMessage = () => {
   const messages = [
     "Oops, not quite! Keep trying, you'll get it.",
     "Almost there! Give it another shot.",
@@ -225,6 +244,10 @@ export const getFailureMessage = () => {
     "Close, but no dice. Keep at it, you'll crack it!"
   ]
   return messages[randomInt(0, messages.length - 1)] 
+}
+
+const getTimeoutMessage = () => {
+  return "Times out! Don't give up, you will get faster"
 }
 
 const randomInt = (min, max) => { 

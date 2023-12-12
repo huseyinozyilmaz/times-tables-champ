@@ -48,6 +48,7 @@
     <footer v-if="debug" class="uppercase text-xs text-center py-3">
       Game Status: {{ game.status }} | 
       Life: {{ game.life }} | 
+      Time Elapsed: {{ timeElapsed }} |
       Counts: {{ game.counts }} |
       Question: {{ game.question }}
     </footer>
@@ -69,22 +70,35 @@ const result = ref({})
 const loading = ref(false)
 
 const remainingTime = computed(() => {
-  return (100 - timeElapsed.value) / 10
+  return (game.value.timeout - timeElapsed.value) / 10
 })
 
 const onStart = () => {
   result.value = {}
   game.value.init(selectedLevel.value)
   game.value.run()
+  startClock()
 }
 
 const onNext = () => {
+  if (!result.value) {
+    return
+  }
+  if (result.value.status === 'success' || timeElapsed.value >= game.value.timeout) {
+    resetClock()
+  }
   result.value = {}
   game.value.next()
 }
 
-const onSubmit = (questionId, answer, timeElapsed) => {
-  result.value = game.value.submit({ questionId, answer, timeElapsed})
+const onSubmit = (questionId, answer) => {
+  result.value = game.value.submit({ questionId, answer, timeElapsed: timeElapsed.value})
+  if (result.value.status === 'success') {
+    pauseClock()
+  }
+  if (['finished', 'over'].includes(game.value.status)) {
+    pauseClock()
+  }
 }
 
 const onScoreSave = async () => {
@@ -99,5 +113,30 @@ const onScoreSave = async () => {
 
 const onLevelChange = () => {
   game.value.init(selectedLevel.value)
+}
+
+const startClock = () => {
+  timeElapsed.value = 0
+  interval.value = setInterval(() =>{
+    timeElapsed.value++
+    if (timeElapsed.value >= game.value.timeout) {
+      // Times Up
+      pauseClock()
+      onSubmit(game.value.question.id, -1)
+    }
+  }, 100)
+}
+
+const pauseClock = () => {
+  clearInterval(interval.value)
+}
+
+const resetClock = () => {
+  timeElapsed.value = 0
+  if (interval.value !== undefined) {
+    clearInterval(interval.value)
+    interval.value = undefined
+  }
+  startClock()
 }
 </script>
