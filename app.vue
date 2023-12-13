@@ -14,7 +14,7 @@
       
     </nav>
     <NuxtPage />
-    <footer class="text-xs uppercase opacity-30 fixed bottom-0 right-0 p-2">rev: 12 Dec 2023</footer>
+    <footer class="text-xs uppercase opacity-30 fixed bottom-0 right-0 p-2">rev: 13 Dec 2023</footer>
   </div>
 </template>
 
