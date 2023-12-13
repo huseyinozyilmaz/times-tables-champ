@@ -39,7 +39,7 @@ export class Game {
     const data = {
       player,
       score: this.score,
-      badges: []
+      badges: calculateBadges(this.answers, this.life, this.level)
     }
     await $fetch(URL, {
       method: 'POST',
@@ -63,28 +63,34 @@ export class Game {
     if (!isAnswerCorrect(this.question, response.answer)) {
       this.life--
       this.status = this.life < 1 ? 'over' : this.status
-      return {
+      const wrongAnswer = {
         status: 'error',
         answer: solveQuestion(this.question),
-        message: response.timeElapsed >=this.timeout ? getTimeoutMessage() : getFailureMessage()
+        message: response.timeElapsed >=this.timeout ? getTimeoutMessage() : getFailureMessage(),
+        timeElapsed: response.timeElapsed
       }
+      this.answers[this.question.id] = wrongAnswer
+      return wrongAnswer
     }
 
-    const answer = {
+    const correctAnswer = {
       status: 'success',
       answer: solveQuestion(this.question),
       message: getSuccessMessage(),
-      score: calculateScore(response)
+      score: calculateScore(response),
+      timeElapsed: response.timeElapsed
     }
 
-    this.question.answer = answer
+    this.answers[this.question.id] = correctAnswer
+
+    this.question.answer = correctAnswer
     this.counts.answered++
     this.counts.remaining--
     
     this.status = this.counts.remaining === 0 ? 'finished' : this.status
 
     this.score += calculateScore(response).value
-    return answer
+    return correctAnswer
   }
 }
 
@@ -116,6 +122,27 @@ const calculateScore = (response) => {
     return { value: Math.round(response.answer * 1.1), bonus: '' }
   }
   return response.answer
+}
+
+const calculateBadges = (answers, remainingLife, level) => {
+  const earnedBadges = []
+  if (remainingLife < 3) {
+    return earnedBadges
+  }
+
+  earnedBadges.push('L'+ level)
+
+  if (level < 12) {
+    return earnedBadges
+  }
+
+  if (!answers.find(e => e.timeElapsed >= 20)) {
+    earnedBadges.push('LL')
+  } else if (!answers.find(e => e.timeElapsed >= 50)) {
+    earnedBadges.push('LS')
+  }
+
+  return earnedBadges
 }
 const findNear = (point, min, max) => {
   return randomInt(point-2 > min ? point-2 : min, point + 2 > max ? max : point + 2 ) 
@@ -186,7 +213,7 @@ const generateQuestions = (level, maxLevel, matrix) => {
     questions = removeLevelFromQuestions(questions, 2)
   }
   /** Testing purposes only */
-  // questions = questions.slice(0,3)
+  // questions = questions.slice(0,5)
   return questions
 }
 

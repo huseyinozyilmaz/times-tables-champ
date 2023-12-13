@@ -10,12 +10,16 @@
     </section>
     
     <section v-else class="font-black-ops-one">
-      <div v-for="(record, index) in scores" :key="record.key" class="flex gap-3 p-3 border m-3 rounded-lg border-gray-800 shadow-lg">
+      <div v-for="(record, index) in scores" :key="record.key" class="flex h-[110px] gap-3 px-3 border m-3 rounded-lg border-gray-300 shadow-lg items-center">
         <div class="text-3xl">{{ index + 1 }}.</div>
         <svg xmlns="http://www.w3.org/2000/svg" class="w-8" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32"><path d="M16 8a5 5 0 1 0 5 5a5 5 0 0 0-5-5z" fill="currentColor"></path><path d="M16 2a14 14 0 1 0 14 14A14.016 14.016 0 0 0 16 2zm7.992 22.926A5.002 5.002 0 0 0 19 20h-6a5.002 5.002 0 0 0-4.992 4.926a12 12 0 1 1 15.985 0z" fill="currentColor"></path></svg>
-        <div class="uppercase tracking-wider text-2xl flex-1">{{ record.player }}</div>
-        <div></div>
-        <div class="w-32 text-2xl text-right">{{ record.score }}</div>
+        <div class="uppercase tracking-wider text-3xl flex-1">{{ record.player }}</div>
+        <div v-if="hasBadge(record)" class="flex">
+          <div v-for="badge in record.badges" class="flex">
+            <img :src="badgeLink(badge)" alt="badge" class="w-[100px]">
+          </div>
+        </div>
+        <div class="w-32 text-3xl text-right align-middle">{{ record.score }}</div>
       </div>
     </section>
     
@@ -30,6 +34,16 @@
 import { URL } from '../helpers/leaderboard'
 
 const { data: scores, pending } = await useFetch(`${URL}?v=${new Date().valueOf() }`)
+
+const hasBadge = (record) => {
+  if (record && record.badges && record.badges.length) {
+    return true
+  }
+  return false
+}
+const badgeLink = (badge) => {
+  return `/resources/badges/${badge}.webp`
+}
 
 const onBack = () => {
   navigateTo('/')
