@@ -6,7 +6,7 @@
       <div>x</div>
       <div class="w-20">{{ question.multipliers[1] }}</div>
       <div>=</div>
-      <div class="w-20">{{ result.status === 'success' ? result.answer : '?'}}</div>
+      <div class="w-20">{{ showAnswer ? result.answer : '?'}}</div>
     </h1>
     <div class="flex justify-center py-8">
       <TouchButtonType v-for="option in question.options" @click="submit(option)">
@@ -35,6 +35,10 @@ const submit = (answer) => {
 
 const hasBonus = computed(() => {
   return props.result && props.result.score && props.result.score.bonus
+})
+
+const showAnswer = computed(() => {
+  return props.result.status === 'success' || (props.result.time && props.result.time.isUp)
 })
 
 </script>

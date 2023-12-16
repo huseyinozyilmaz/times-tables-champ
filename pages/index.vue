@@ -45,7 +45,8 @@
       <h1 class="font-black-ops-one text-lg py-7 tracking-wider">Are you ready?</h1>
       <TouchButton @click="onStart()">Start the game</TouchButton>
     </section>
-    <footer v-if="debug" class="uppercase text-xs text-center py-3">
+    <footer v-if="config.debug" class="uppercase text-xs text-center py-3">
+      Config:  {{ config }} |
       Game Status: {{ game.status }} | 
       Life: {{ game.life }} | 
       Time Elapsed: {{ timeElapsed }} |
@@ -59,9 +60,9 @@
 import { Game } from '../helpers/game'
 import { formatTime } from '../helpers/formatters'
 
-const debug = false
+const config = useAppConfig()
 const selectedLevel = ref(3)
-const game = ref(new Game(selectedLevel.value))
+const game = ref(new Game(selectedLevel.value, config))
 const player = ref('')
 const timeElapsed = ref(0)
 const interval = ref(undefined)

@@ -2,7 +2,7 @@ import { URL } from "./leaderboard"
 
 export class Game {
 
-  constructor(level) {
+  constructor(level, config) {
     this.level = level ? level : 3
     this.life = 3
     this.score = 0
@@ -14,6 +14,7 @@ export class Game {
     this.counts = { remaining: level * 12, answered: 0, total: level * 12 } 
     this.answers = []
     this.timeout = 100 //10 Sec based on interval of 100
+    this.config = config
   }
 
   init(selectedLevel) {
@@ -21,7 +22,7 @@ export class Game {
     this.score = 0
     this.level = selectedLevel ? selectedLevel : 3
     this.matrix = generateMatrix()
-    this.questions = generateQuestions(this.level, this.maxLevel, this.matrix)
+    this.questions = generateQuestions(this.level, this.maxLevel, this.matrix, this.config.testing)
     this.question = {}
     this.counts = { remaining: this.questions.length, answered: 0, total: this.questions.length } 
 
@@ -55,42 +56,47 @@ export class Game {
     return this.counts.remaining === 0
   }
 
+  /**
+   * Player's respond to a question
+   * @param {Object} response 
+   * @returns {Object} answer
+   */
   submit (response) {
     if (this.question.answer) {
       return this.question.answer
     }
 
-    if (!isAnswerCorrect(this.question, response.answer)) {
+    const time = calculateTime(response.timeElapsed, this.timeout)
+    const isCorrect = isAnswerCorrect(this.question, response.answer)
+    const result = isCorrect ? 'success' : time.isUp ? 'timeout' : 'error'
+    const message = getMessageByResult(result)
+    const score = calculateScore(response, isCorrect)
+
+    const answer = {
+      status: result,
+      answer: solveQuestion(this.question),
+      message,
+      score,
+      time
+    }
+
+    this.answers[this.question.id] = answer
+
+    if (!isCorrect) {
       this.life--
       this.status = this.life < 1 ? 'over' : this.status
-      const wrongAnswer = {
-        status: 'error',
-        answer: solveQuestion(this.question),
-        message: response.timeElapsed >=this.timeout ? getTimeoutMessage() : getFailureMessage(),
-        timeElapsed: response.timeElapsed
+      if (!time.isUp) {
+        return answer
       }
-      this.answers[this.question.id] = wrongAnswer
-      return wrongAnswer
     }
 
-    const correctAnswer = {
-      status: 'success',
-      answer: solveQuestion(this.question),
-      message: getSuccessMessage(),
-      score: calculateScore(response),
-      timeElapsed: response.timeElapsed
-    }
-
-    this.answers[this.question.id] = correctAnswer
-
-    this.question.answer = correctAnswer
+    this.question.answer = answer
     this.counts.answered++
     this.counts.remaining--
-    
-    this.status = this.counts.remaining === 0 ? 'finished' : this.status
 
-    this.score += calculateScore(response).value
-    return correctAnswer
+    this.status = this.counts.remaining === 0 ? 'finished' : this.status
+    this.score += score.value
+    return answer
   }
 }
 
@@ -102,7 +108,10 @@ const solveQuestion = (question) => {
   return question.multipliers[0] * question.multipliers[1]
 }
 
-const calculateScore = (response) => {
+const calculateScore = (response, answeredCorrectly) => {
+  if (!answeredCorrectly) {
+    return { value: 0, bonus: '' }
+  }
   if (response.timeElapsed < 10) {
     return { value: response.answer * 3, bonus: '3x' }
   }
@@ -121,7 +130,19 @@ const calculateScore = (response) => {
   if (response.timeElapsed < 80) {
     return { value: Math.round(response.answer * 1.1), bonus: '' }
   }
-  return response.answer
+  return { value: response.answer, bonus: '' }
+}
+
+const isTimeout = (timeElapsed, timeout) => {
+  return timeElapsed >= timeout
+}
+
+const calculateTime = (timeElapsed, timeout) => {
+  return {
+    elapsed: timeElapsed,
+    remaining: timeout - timeElapsed,
+    isUp: isTimeout(timeElapsed, timeout)
+  }
 }
 
 const calculateBadges = (answers, remainingLife, level) => {
@@ -196,7 +217,7 @@ const generateQuestion = (level, maxLevel, matrix) => {
   }
 }
 
-const generateQuestions = (level, maxLevel, matrix) => {
+const generateQuestions = (level, maxLevel, matrix, testing) => {
   let questions = []
   const numberOfTotalQuestions = level * maxLevel
   while (questions.length < numberOfTotalQuestions) {
@@ -212,13 +233,27 @@ const generateQuestions = (level, maxLevel, matrix) => {
   if (level > 5) {
     questions = removeLevelFromQuestions(questions, 2)
   }
-  /** Testing purposes only */
-  // questions = questions.slice(0,5)
+
+  if (testing) {
+    questions = questions.slice(0,5)
+  }
+  
   return questions
 }
 
 const removeLevelFromQuestions = (questions, levelToBeRemoved) => {
   return questions.filter(q => q.level !== levelToBeRemoved)
+}
+
+const getMessageByResult = (result) => {
+  switch(result) {
+    case 'success':
+      return getSuccessMessage()
+    case 'error':
+      return getFailureMessage()
+    case 'timeout':
+      return getTimeoutMessage()
+  }
 }
 
 const getSuccessMessage = () => {
