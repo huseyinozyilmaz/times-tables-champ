@@ -1,5 +1,5 @@
 export default defineAppConfig({
   debug: false,
   testing: false,
-  version: '16 Dec 2023'
+  version: '17 Dec 2023'
 })

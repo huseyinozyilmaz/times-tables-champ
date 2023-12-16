@@ -1,13 +1,14 @@
 <template>
   <div>
-    <nav class="flex justify-center gap-3 py-4 uppercase font-bold">
-      <NuxtLink to="/" class="px-5 w-48" @click="reload">
+    <nav class="flex justify-center gap-3 py-2 md:py-4 uppercase font-bold flex-wrap">
+      <NuxtLink to="/" class="px-2 md:px-5 md:w-48 pt-1" @click="reload">
         <div class="flex justify-start">
-          <img src="~/assets/images/logo-b.svg" alt="logo" class="w-10">
+          <img src="~/assets/images/logo-b.svg" alt="logo" class="w-8 md:w-10">
         </div>
       </NuxtLink>
-      <h1 class="text-center py-2 text-4xl font-black-ops-one flex-1 tracking-widest">Times Tables Champ</h1>
-      <div class="w-48 flex gap-5 text-sm text-sky-950 tracking-wider">
+      <h1 class="text-center py-2 text-xl md:text-4xl font-black-ops-one flex-1 tracking-widest">Times Tables Champ</h1>
+      <div class="w-8 md:w-0"></div>
+      <div class="md:w-48 flex gap-5 text-sm text-sky-950 tracking-wider">
         <NuxtLink to="/scoreboard">Scoreboard</NuxtLink>
         <NuxtLink to="/about">About</NuxtLink>
       </div>

@@ -1,14 +1,14 @@
 
 <template>
   <div v-if="question">
-    <h1 class="text-5xl flex justify-center">
+    <h1 class="text-4xl md:text-5xl flex justify-center">
       <div class="w-20">{{ question.multipliers[0] }}</div>
       <div>x</div>
       <div class="w-20">{{ question.multipliers[1] }}</div>
       <div>=</div>
       <div class="w-20">{{ showAnswer ? result.answer : '?'}}</div>
     </h1>
-    <div class="flex justify-center py-8">
+    <div class="flex justify-center py-3 md:py-4 flex-wrap w-[80%] m-auto">
       <TouchButtonType v-for="option in question.options" @click="submit(option)">
         {{ option }}
       </TouchButtonType>
