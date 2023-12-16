@@ -14,12 +14,13 @@
       
     </nav>
     <NuxtPage />
-    <footer class="text-xs uppercase opacity-30 fixed bottom-0 right-0 p-2">rev: 13 Dec 2023</footer>
+    <footer class="text-xs uppercase opacity-30 fixed bottom-0 right-0 p-2">rev: {{ config.version }}</footer>
   </div>
 </template>
 
 <script setup>
 const route = useRoute()
+const config = useAppConfig()
 
 useHead({
   title: 'Times Tables Champ | A game to practice multiplication tables',
