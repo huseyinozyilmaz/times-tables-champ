@@ -23,6 +23,9 @@ const route = useRoute()
 const config = useAppConfig()
 
 useHead({
+  htmlAttrs: {
+    lang: 'en'
+  },
   title: 'Times Tables Champ | A game to practice multiplication tables',
   link: [
     { rel: "apple-touch-icon", sizes: "180x180", href: "/resources/apple-touch-icon.png" },
@@ -34,6 +37,9 @@ useHead({
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
     { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: ''},
     { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" }
+  ],
+  meta: [
+    { name: "description", content: "A game for 7 and 8 years old's to practice multiplication tables" }
   ]
 })
 

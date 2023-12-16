@@ -2,7 +2,7 @@
   <div>
     <header class="uppercase text-center py-3 font-mono flex justify-center border-b">
       <div class="w-24">
-        <h3 class="font-bold">Level</h3>
+        <label class="font-bold" for="selectedLevel">Level</label>
         <div class="flex justify-center">
           <select id="selectedLevel" v-model="selectedLevel" @change="onLevelChange" class='select' :disabled="game.status === 'running'">
             <option v-for="level in game.maxLevel " :value="level">{{ level}}</option>
@@ -10,19 +10,19 @@
         </div>
       </div>
       <div class="w-24">
-        <h3 class="font-bold">Questions</h3>
+        <div class="font-bold">Questions</div>
         <div class="py-2.5">{{ game.counts.remaining }}</div>
       </div>
       <div class="w-24">
-        <h3 class="font-bold">Time</h3>
+        <div class="font-bold">Time</div>
         <div class="py-2.5">{{ formatTime(remainingTime) }}</div>
       </div>
       <div class="w-24">
-        <h3 class="font-bold">Life</h3>
+        <div class="font-bold">Life</div>
         <div class="py-2.5">{{ game.life }}</div>
       </div>
       <div class="w-24">
-        <h3 class="font-bold">Score</h3>
+        <div class="font-bold">Score</div>
         <div class="py-2.5">{{ game.score }}</div>
       </div>
     </header>
