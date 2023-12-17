@@ -27,7 +27,6 @@ useHead({
   htmlAttrs: {
     lang: 'en'
   },
-  title: 'Times Tables Champ | A game to practice multiplication tables skills',
   link: [
     { rel: "apple-touch-icon", sizes: "180x180", href: "/resources/apple-touch-icon.png" },
     { rel: "icon", type: "image/png", sizes: "32x32", href: "/resources/favicon-32x32.png" },
@@ -38,10 +37,16 @@ useHead({
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
     { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: ''},
     { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" }
-  ],
-  meta: [
-    { name: "description", content: "A game tailored for 7 to 8-year-olds to practice multiplication tables skills. Solve questions, collect badges, register your name to the leaderboard." }
   ]
+})
+
+useSeoMeta({
+  title: 'Times Tables Champ | A game to practice multiplication tables skills',
+  ogTitle: 'Times Tables Champ | A game to practice multiplication tables skills',
+  description: 'A game tailored for 7 to 8-year-olds to practice multiplication tables skills. Solve questions, collect badges, register your name to the leaderboard.',
+  ogDescription: 'A game tailored for 7 to 8-year-olds to practice multiplication tables skills. Solve questions, collect badges, register your name to the leaderboard.',
+  ogImage: 'https://timestableschamp.datalogy.app/resources/timestableschamp-social.png',
+  twitterCard: 'summary_large_image',
 })
 
 const reload = () => {
