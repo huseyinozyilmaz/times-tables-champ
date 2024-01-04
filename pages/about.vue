@@ -8,7 +8,7 @@
         <h2 class="text-lg md:text-xl font-bold py-4">🚀 Welcome to our world of multiplication fun! 🚀</h2>
         <p>Hello, fellow math enthusiasts! We're Huseyin and Ahmed, a dynamic duo on a mission to make learning times tables an exciting adventure for young minds. Our journey began when we realised that traditional methods of memorizing multiplication facts were not as thrilling as they could be. So, we decided to embark on a quest to create our very own times tables game!</p>
         <h2 class="text-lg md:text-xl font-bold py-4">💥 The Spark of Creativity</h2>
-        <p>It all started one day when Ahmed, our brilliant 7-year-old, expressed a desire to master times tables in a more interactive way. Instead of sticking to dull flashcards and rote memorisation, we put on our thinking caps and brainstormed ideas for a game that would make learning multiplication a joyous experience.</p>
+        <p>It all started one day when Ahmed, our brilliant 8-year-old, expressed a desire to master times tables in a more interactive way. Instead of sticking to dull flashcards and rote memorisation, we put on our thinking caps and brainstormed ideas for a game that would make learning multiplication a joyous experience.</p>
         <h2 class="text-lg md:text-xl font-bold py-4">🎨 The Creative Process</h2>
         <p>Our living room became a brainstorming hub filled with whiteboard, markers, and endless laughter. We experimented with various game concepts, each aimed at making multiplication exciting and rewarding. We wanted our game to not only challenge young minds but also inspire a love for numbers.</p>
         <h2 class="text-lg md:text-xl font-bold py-4">🛠️ Building Blocks of the Game</h2>
